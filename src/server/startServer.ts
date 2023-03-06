@@ -1,6 +1,6 @@
 import "../loadEnvironment.js";
 import createDebug from "debug";
-import { app } from "./index.js";
+import { app } from "./app.js";
 import type CustomError from "../CustomError/CustomError.js";
 
 const debug = createDebug("social:server:startServer");

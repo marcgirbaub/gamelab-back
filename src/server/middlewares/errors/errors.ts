@@ -1,5 +1,6 @@
 import "../../../loadEnvironment.js";
 import createDebug from "debug";
+import chalk from "chalk";
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
 import statusCodes from "../../utils/statusCodes.js";
@@ -8,6 +9,7 @@ const debug = createDebug("gamelab:server:middlewares:errors");
 
 const {
   clientError: { notFound },
+  serverError: { internalServer },
 } = statusCodes;
 
 export const notFoundError = (
@@ -22,4 +24,18 @@ export const notFoundError = (
   );
 
   next(error);
+};
+
+export const generalError = (
+  error: CustomError,
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  debug(chalk.red(error.message));
+
+  const statusCode = error.statusCode || internalServer;
+  const publicMessage = error.publicMessage || "Something went wrong";
+
+  res.status(statusCode).json({ error: publicMessage });
 };
