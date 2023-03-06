@@ -3,6 +3,8 @@ const statusCodes = {
   serverError: {
     internalServer: 500,
   },
+
+  success: { okCode: 200 },
 };
 
 export default statusCodes;
