@@ -28,7 +28,6 @@ describe("Given a loginUser controller", () => {
     username: "mark4",
     password: "mark1234",
   };
-
   describe("When it receives a request with username `mark4` and password `mark1234` and the user is not registered in the database", () => {
     test("Then it shpuld call its next method with status 401 and the message `Wrong credentials`", async () => {
       const expectedError = loginUserErrors.userNotFound;
