@@ -1,0 +1,17 @@
+{
+  "name": "gamelab-back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "build:dev": "npx tsc -w",
+    "start": "node dist",
+    "start:dev": "node --watch dist",
+    "test": "npx jest",
+    "test:coverage": "npx jest --coverage --watchAll=false --passWithNoTests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
