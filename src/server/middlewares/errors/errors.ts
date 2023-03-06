@@ -1,6 +1,5 @@
 import "../../../loadEnvironment.js";
 import createDebug from "debug";
-import chalk from "chalk";
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
 import statusCodes from "../../utils/statusCodes.js";
@@ -32,7 +31,7 @@ export const generalError = (
   res: Response,
   next: NextFunction
 ) => {
-  debug(chalk.red(error.message));
+  debug(error.message);
 
   const statusCode = error.statusCode || internalServer;
   const publicMessage = error.publicMessage || "Something went wrong";
