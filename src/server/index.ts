@@ -7,6 +7,15 @@ export const app = express();
 
 app.disable("x-powered-by");
 
-app.use(cors());
+const corsOptions = {
+  origin: [
+    "http://localhost:4000",
+    "http://localhost:4001",
+    "http://localhost:3000",
+    "http://localhost:3001",
+  ],
+};
+
+app.use(cors(corsOptions));
 app.use(morgan("dev"));
 app.use(express.json());
