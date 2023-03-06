@@ -6,7 +6,6 @@ import { loginUserErrors } from "../../utils/errors.js";
 import { type UserCredentials } from "./types.js";
 import { type CustomJwtPayload } from "../../../types.js";
 import statusCodes from "../../utils/statusCodes.js";
-import { ok } from "assert";
 
 const {
   success: { okCode },
@@ -24,7 +23,7 @@ export const loginUser = async (
   const { password, username } = req.body;
 
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username }).exec();
 
     if (!user) {
       next(loginUserErrors.userNotFound);
