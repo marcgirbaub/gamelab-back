@@ -7,6 +7,8 @@ import { loginUserErrors } from "../../utils/errors.js";
 import statusCodes from "../../utils/statusCodes";
 import { type UserCredentials } from "./types.js";
 import { loginUser } from "./userControllers.js";
+import { mockUserId } from "../../../mocks/userMocks.js";
+import { secret } from "../../../loadEnvironment.js";
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -23,11 +25,12 @@ const req = {} as Request<
 >;
 const next = jest.fn();
 
+export const mockUser: UserCredentials = {
+  username: "mark4",
+  password: "mark1234",
+};
+
 describe("Given a loginUser controller", () => {
-  const mockUser: UserCredentials = {
-    username: "mark4",
-    password: "mark1234",
-  };
   describe("When it receives a request with username `mark4` and password `mark1234` and the user is not registered in the database", () => {
     test("Then it shpuld call its next method with status 401 and the message `Wrong credentials`", async () => {
       const expectedError = loginUserErrors.userNotFound;
@@ -47,25 +50,22 @@ describe("Given a loginUser controller", () => {
   describe("When it receives a request with a username `mark4` and password `mark1234` and the user is registered in the database", () => {
     test("Then it should call its status method with 200 and its json method with a token", async () => {
       const expectedStatusCode = statusCodes.success.okCode;
-      const mockToken = "sadfh32434jhasdlfkh";
 
-      const expectedBodyResponse = { token: mockToken };
       req.body = mockUser;
 
+      const token = jwt.sign(mockUserId, secret!);
+
       User.findOne = jest.fn().mockImplementationOnce(() => ({
-        exec: jest.fn().mockResolvedValue({
-          ...mockUser,
-          _id: new mongoose.Types.ObjectId(),
-        }),
+        exec: jest.fn().mockResolvedValue(mockUserId),
       }));
 
       bcrypt.compare = jest.fn().mockResolvedValue(true);
-      jwt.sign = jest.fn().mockReturnValue(mockToken);
+      jwt.sign = jest.fn().mockReturnValue(token);
 
       await loginUser(req, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
-      expect(res.json).toHaveBeenCalledWith(expectedBodyResponse);
+      expect(res.json).toHaveBeenCalledWith({ token });
     });
   });
 

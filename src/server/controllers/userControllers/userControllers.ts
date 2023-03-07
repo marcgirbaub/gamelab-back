@@ -40,9 +40,7 @@ export const loginUser = async (
       username,
     };
 
-    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!, {
-      expiresIn: "2d",
-    });
+    const token = jwt.sign(jwtPayload, process.env.JWT_SECRET!);
 
     res.status(okCode).json({ token });
   } catch (error: unknown) {
