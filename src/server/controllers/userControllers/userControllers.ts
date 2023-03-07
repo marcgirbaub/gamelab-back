@@ -30,7 +30,7 @@ export const loginUser = async (
       return;
     }
 
-    if (!(await bcrypt.compare(password, password))) {
+    if (!(await bcrypt.compare(password, user.password))) {
       next(loginUserErrors.wrongPassword);
       return;
     }
