@@ -11,11 +11,7 @@ const connectDatabase = async (url: string) => {
     },
   });
 
-  try {
-    await mongoose.connect(url);
-  } catch (error: unknown) {
-    throw new Error((error as Error).message);
-  }
+  await mongoose.connect(url);
 };
 
 export default connectDatabase;

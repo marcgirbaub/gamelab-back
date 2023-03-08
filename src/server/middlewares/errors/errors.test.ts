@@ -1,4 +1,5 @@
 import { type Request, type NextFunction, type Response } from "express";
+import { ValidationError, type errors } from "express-validation";
 import CustomError from "../../../CustomError/CustomError.js";
 import statusCodes from "../../utils/statusCodes.js";
 import { generalError, notFoundError } from "./errors.js";
@@ -61,6 +62,43 @@ describe("Given a generalError middleware", () => {
 
       expect(res.status).toHaveBeenCalledWith(internalServer);
       expect(res.json).toHaveBeenCalledWith({ error: expectedPublicMessage });
+    });
+  });
+
+  describe("When the error received is due to credentials provided not meeting the standards", () => {
+    test("Then it should call its json method with the message `Something went wrong`", () => {
+      const error: errors = {
+        body: [
+          {
+            name: "ValidationError",
+            isJoi: true,
+            annotate(stripColors) {
+              return "";
+            },
+            _original: "",
+            message: "",
+            details: [
+              {
+                message: "",
+                path: [""],
+                type: "",
+              },
+            ],
+          },
+        ],
+      };
+
+      const expectedMessage = "Validation has failed";
+      const validationError = new ValidationError(error, {});
+
+      generalError(
+        validationError as unknown as CustomError,
+        req,
+        res as Response,
+        next
+      );
+
+      expect(res.json).toHaveBeenCalledWith({ error: expectedMessage });
     });
   });
 });

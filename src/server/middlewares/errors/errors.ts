@@ -1,4 +1,5 @@
 import "../../../loadEnvironment.js";
+import { ValidationError } from "express-validation";
 import createDebug from "debug";
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
@@ -35,6 +36,16 @@ export const generalError = (
 
   const statusCode = error.statusCode || internalServer;
   const publicMessage = error.publicMessage || "Something went wrong";
+
+  if (error instanceof ValidationError) {
+    debug(error.details.body!.map((error) => error.message).join(" - "));
+
+    const publicMessage = "Validation has failed";
+
+    res.status(statusCode).json({ error: publicMessage });
+
+    return;
+  }
 
   res.status(statusCode).json({ error: publicMessage });
 };
