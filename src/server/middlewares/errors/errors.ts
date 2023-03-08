@@ -39,6 +39,12 @@ export const generalError = (
 
   if (error instanceof ValidationError) {
     debug(error.details.body!.map((error) => error.message).join(" - "));
+
+    const publicMessage = "Validation has failed";
+
+    res.status(statusCode).json({ error: publicMessage });
+
+    return;
   }
 
   res.status(statusCode).json({ error: publicMessage });
