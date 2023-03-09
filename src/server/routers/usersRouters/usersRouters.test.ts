@@ -91,4 +91,20 @@ describe("Given a POST /users/register endpoint", () => {
       );
     });
   });
+
+  describe("When it receives a request with username `mark4`, password `mark1234` and email `mark@gmail.com` and the username is already in use", () => {
+    test("Then it should respond with a status code 409 and a message `The username is already in use`", async () => {
+      const expectedErrorMessage = "The username is already in use";
+      const expectedStatus = clientError.conflict;
+
+      await User.create(newUser);
+
+      const response = await request(app)
+        .post(registerUrl)
+        .send(newUser)
+        .expect(expectedStatus);
+
+      expect(response.body).toHaveProperty("error", expectedErrorMessage);
+    });
+  });
 });
