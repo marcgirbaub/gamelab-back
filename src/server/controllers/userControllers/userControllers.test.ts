@@ -5,10 +5,11 @@ import mongoose from "mongoose";
 import User from "../../../database/models/User.js";
 import { loginUserErrors } from "../../utils/errors.js";
 import statusCodes from "../../utils/statusCodes";
-import { type UserCredentials } from "./types.js";
-import { loginUser } from "./userControllers.js";
+import { type UserRegisterCredentials, type UserCredentials } from "./types.js";
+import { loginUser, registerUser } from "./userControllers.js";
 import { mockUserId } from "../../../mocks/userMocks.js";
 import { secret } from "../../../loadEnvironment.js";
+import CustomError from "../../../CustomError/CustomError.js";
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -18,11 +19,7 @@ const res: Partial<Response> = {
   status: jest.fn().mockReturnThis(),
   json: jest.fn(),
 };
-const req = {} as Request<
-  Record<string, unknown>,
-  Record<string, unknown>,
-  UserCredentials
->;
+
 const next = jest.fn();
 
 export const mockUser: UserCredentials = {
@@ -30,7 +27,17 @@ export const mockUser: UserCredentials = {
   password: "mark1234",
 };
 
+export const mockUserRegister: UserRegisterCredentials = {
+  ...mockUser,
+  email: "example@email.com",
+};
+
 describe("Given a loginUser controller", () => {
+  const req = {} as Request<
+    Record<string, unknown>,
+    Record<string, unknown>,
+    UserCredentials
+  >;
   describe("When it receives a request with username `mark4` and password `mark1234` and the user is not registered in the database", () => {
     test("Then it shpuld call its next method with status 401 and the message `Wrong credentials`", async () => {
       const expectedError = loginUserErrors.userNotFound;
@@ -101,6 +108,52 @@ describe("Given a loginUser controller", () => {
       await loginUser(req, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(errorDatabase);
+    });
+  });
+});
+
+describe("Given a registerUser controller", () => {
+  const req = {} as Request<
+    Record<string, unknown>,
+    Record<string, unknown>,
+    UserRegisterCredentials
+  >;
+
+  describe("When it receives a request with a user to register correctly", () => {
+    test("Then it should call its status method with 200 and its json method with the message `The user has been created`", async () => {
+      const expectedMessage = { message: "The user has been created" };
+      const expectedStatusCode = 201;
+
+      req.body = mockUserRegister;
+      bcrypt.hash = jest.fn().mockResolvedValue("asdfasdg3425342dsafsdfg");
+      User.create = jest.fn().mockResolvedValue(mockUserRegister);
+
+      await registerUser(req, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatusCode);
+      expect(res.json).toHaveBeenCalledWith(expectedMessage);
+    });
+  });
+
+  describe("When it receives a request with a user to register without username", () => {
+    test("Then it should call its next method with and error message `The user couldn't be created`", async () => {
+      const mockUserWithoutUsername = {
+        ...mockUserRegister,
+        username: "",
+      };
+
+      const expectedError = new CustomError(
+        "The user couldn't be created",
+        409,
+        "There was a problem creating the user"
+      );
+
+      req.body = mockUserWithoutUsername;
+      User.create = jest.fn().mockRejectedValue(undefined);
+
+      await registerUser(req, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
