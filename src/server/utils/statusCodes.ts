@@ -4,7 +4,7 @@ const statusCodes = {
     internalServer: 500,
   },
 
-  success: { okCode: 200 },
+  success: { okCode: 200, created: 201 },
 };
 
 export default statusCodes;
