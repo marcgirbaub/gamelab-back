@@ -2,7 +2,7 @@ import CustomError from "../../CustomError/CustomError.js";
 import statusCodes from "./statusCodes.js";
 
 const {
-  clientError: { unauthorized },
+  clientError: { unauthorized, conflict },
 } = statusCodes;
 
 export const loginUserErrors = {
@@ -15,5 +15,13 @@ export const loginUserErrors = {
     "Wrong password",
     unauthorized,
     "Wrong credentials"
+  ),
+};
+
+export const registerUserError = {
+  userAlreadyExists: new CustomError(
+    "The user already exists",
+    conflict,
+    "The username is already in use"
   ),
 };

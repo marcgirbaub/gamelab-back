@@ -3,11 +3,16 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import User from "../../../database/models/User.js";
-import { loginUserErrors } from "../../utils/errors.js";
+import { loginUserErrors, registerUserError } from "../../utils/errors.js";
 import statusCodes from "../../utils/statusCodes";
 import { type UserRegisterCredentials, type UserCredentials } from "./types.js";
 import { loginUser, registerUser } from "./userControllers.js";
-import { mockUserId } from "../../../mocks/userMocks.js";
+import {
+  hashedPassword,
+  mockUser,
+  mockUserId,
+  mockUserRegister,
+} from "../../../mocks/userMocks.js";
 import { secret } from "../../../loadEnvironment.js";
 import CustomError from "../../../CustomError/CustomError.js";
 
@@ -21,16 +26,6 @@ const res: Partial<Response> = {
 };
 
 const next = jest.fn();
-
-export const mockUser: UserCredentials = {
-  username: "mark4",
-  password: "mark1234",
-};
-
-export const mockUserRegister: UserRegisterCredentials = {
-  ...mockUser,
-  email: "example@email.com",
-};
 
 describe("Given a loginUser controller", () => {
   const req = {} as Request<
@@ -125,7 +120,7 @@ describe("Given a registerUser controller", () => {
       const expectedStatusCode = 201;
 
       req.body = mockUserRegister;
-      bcrypt.hash = jest.fn().mockResolvedValue("asdfasdg3425342dsafsdfg");
+      bcrypt.hash = jest.fn().mockResolvedValue(hashedPassword);
       User.create = jest.fn().mockResolvedValue(mockUserRegister);
 
       await registerUser(req, res as Response, next);
@@ -148,12 +143,29 @@ describe("Given a registerUser controller", () => {
         "There was a problem creating the user"
       );
 
+      const error = new Error("The user couldn't be created");
+
       req.body = mockUserWithoutUsername;
-      User.create = jest.fn().mockRejectedValue(undefined);
+      User.create = jest.fn().mockRejectedValue(error);
 
       await registerUser(req, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it receives a request with username  `mark4` and password `mark1234` and the username is already taken", () => {
+    test("Then it should call its next method with a status code 409 and the message `The username is already in use`", async () => {
+      const duplicateError = new Error("duplicate");
+
+      req.body = mockUserRegister;
+
+      bcrypt.hash = jest.fn().mockResolvedValue(hashedPassword);
+      User.create = jest.fn().mockRejectedValue(duplicateError);
+
+      await registerUser(req, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(registerUserError.userAlreadyExists);
     });
   });
 });
