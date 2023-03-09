@@ -2,7 +2,7 @@ import { type NextFunction, type Request, type Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../../database/models/User.js";
-import { loginUserErrors } from "../../utils/errors.js";
+import { loginUserErrors, registerUserError } from "../../utils/errors.js";
 import { type UserRegisterCredentials, type UserCredentials } from "./types.js";
 import { type CustomJwtPayload } from "../../../types.js";
 import statusCodes from "../../utils/statusCodes.js";
@@ -72,10 +72,16 @@ export const registerUser = async (
     });
 
     res.status(201).json({ message: "The user has been created" });
-  } catch (error) {
+  } catch (error: unknown) {
+    if ((error as Error).message.includes("duplicate")) {
+      next(registerUserError.userAlreadyExists);
+
+      return;
+    }
+
     const customError = new CustomError(
-      "The user couldn't be created",
-      409,
+      (error as Error).message,
+      500,
       "There was a problem creating the user"
     );
 
