@@ -1,6 +1,6 @@
 import { type NextFunction, type Request, type Response } from "express";
-import CustomError from "../../../CustomError/CustomError";
-import Game from "../../../database/models/Game";
+import CustomError from "../../../CustomError/CustomError.js";
+import Game from "../../../database/models/Game.js";
 
 export const getAllGames = async (
   req: Request,
