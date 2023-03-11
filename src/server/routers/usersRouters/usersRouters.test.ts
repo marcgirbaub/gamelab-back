@@ -8,7 +8,7 @@ import User from "../../../database/models/User.js";
 import statusCodes from "../../utils/statusCodes.js";
 import { app } from "../../app.js";
 import { loginUserErrors } from "../../utils/errors.js";
-import { mockedToken, mockUser, newUser } from "../../../mocks/userMocks.js";
+import { mockedToken, mockUser, newUser } from "../../mocks/userMocks.js";
 
 const { success, clientError } = statusCodes;
 

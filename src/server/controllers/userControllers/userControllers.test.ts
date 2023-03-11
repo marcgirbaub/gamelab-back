@@ -12,7 +12,7 @@ import {
   mockUser,
   mockUserId,
   mockUserRegister,
-} from "../../../mocks/userMocks.js";
+} from "../../mocks/userMocks.js";
 import { secret } from "../../../loadEnvironment.js";
 import CustomError from "../../../CustomError/CustomError.js";
 

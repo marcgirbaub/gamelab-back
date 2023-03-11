@@ -1,4 +1,4 @@
-import { type Games } from "../server/controllers/gamesControllers/types";
+import { type Games } from "../controllers/gamesControllers/types";
 
 export const games: Games = [
   {
