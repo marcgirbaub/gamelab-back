@@ -1,7 +1,7 @@
 import {
   type UserRegisterCredentials,
   type UserCredentials,
-} from "../server/controllers/userControllers/types";
+} from "../controllers/userControllers/types";
 
 export const mockUserId = {
   username: "mark4",

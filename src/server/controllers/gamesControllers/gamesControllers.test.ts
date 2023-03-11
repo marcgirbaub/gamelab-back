@@ -1,6 +1,6 @@
 import { type Request, type Response } from "express";
 import Game from "../../../database/models/Game";
-import { games } from "../../../mocks/gamesMocks";
+import { games } from "../../mocks/gamesMocks";
 import statusCodes from "../../utils/statusCodes";
 import { getAllGames } from "./gamesControllers";
 
