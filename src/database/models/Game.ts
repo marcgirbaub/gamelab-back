@@ -15,7 +15,7 @@ const gameSchema = new Schema({
   gameplayTime: { type: Number, required: true },
   releaseYear: { type: Number, required: true },
   developer: { type: String, required: true },
-  ageRatig: { type: String, required: true },
+  ageRating: { type: String, required: true },
 });
 
 const Game = model("Games", gameSchema, "games");
