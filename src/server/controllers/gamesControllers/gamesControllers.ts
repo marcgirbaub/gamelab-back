@@ -1,6 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
 import Game from "../../../database/models/Game.js";
+import { type Games } from "./types.js";
 
 export const getAllGames = async (
   req: Request,
@@ -11,7 +12,8 @@ export const getAllGames = async (
     limit: 6,
     page: +req.query.page! || 0,
   };
-  let games;
+  let games: Games;
+  let totalGames: number;
 
   try {
     games = await Game.find()
@@ -19,7 +21,11 @@ export const getAllGames = async (
       .skip(pagination.limit * pagination.page)
       .exec();
 
-    res.status(200).json({ games });
+    totalGames = await Game.countDocuments().exec();
+
+    const totalNumberPages = Math.ceil(totalGames / pagination.limit);
+
+    res.status(200).json({ games, totalNumberPages });
   } catch (error: unknown) {
     const customError = new CustomError(
       (error as Error).message,
