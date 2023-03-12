@@ -11,21 +11,35 @@ export const getAllGames = async (
   const pagination = {
     limit: 6,
     page: +req.query.page! || 0,
+    filter: req.query.filter,
   };
   let games: Games;
   let totalGames: number;
 
   try {
-    games = await Game.find()
-      .limit(pagination.limit)
-      .skip(pagination.limit * pagination.page)
-      .exec();
+    if (pagination.filter) {
+      games = await Game.find({ categories: { $in: pagination.filter } })
+        .limit(pagination.limit)
+        .skip(pagination.limit * pagination.page)
+        .exec();
 
-    totalGames = await Game.countDocuments().exec();
+      totalGames = await Game.countDocuments().exec();
 
-    const totalNumberPages = Math.ceil(totalGames / pagination.limit);
+      const totalNumberPages = Math.ceil(totalGames / pagination.limit);
 
-    res.status(200).json({ games, totalNumberPages });
+      res.status(200).json({ games, totalNumberPages });
+    } else {
+      games = await Game.find()
+        .limit(pagination.limit)
+        .skip(pagination.limit * pagination.page)
+        .exec();
+
+      totalGames = await Game.countDocuments().exec();
+
+      const totalNumberPages = Math.ceil(totalGames / pagination.limit);
+
+      res.status(200).json({ games, totalNumberPages });
+    }
   } catch (error: unknown) {
     const customError = new CustomError(
       (error as Error).message,
