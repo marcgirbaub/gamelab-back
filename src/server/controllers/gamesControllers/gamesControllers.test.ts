@@ -28,6 +28,12 @@ describe("Given a getAllGames controller", () => {
   describe("When it receives a request", () => {
     test("Then it should call its status method with 200 and its json method with games", async () => {
       const expectedStatus = okCode;
+      const totalGames = 3;
+      const totalNumberPages = 1;
+
+      Game.countDocuments = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValue(totalGames),
+      }));
 
       Game.find = jest.fn().mockReturnValue({
         limit: jest.fn().mockReturnValue({
@@ -40,7 +46,7 @@ describe("Given a getAllGames controller", () => {
       await getAllGames(req as Request, res as Response, next);
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
-      expect(res.json).toHaveBeenCalledWith({ games });
+      expect(res.json).toHaveBeenCalledWith({ games, totalNumberPages });
     });
   });
 
