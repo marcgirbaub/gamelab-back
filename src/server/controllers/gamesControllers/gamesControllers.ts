@@ -23,7 +23,9 @@ export const getAllGames = async (
         .skip(pagination.limit * pagination.page)
         .exec();
 
-      totalGames = await Game.countDocuments().exec();
+      totalGames = await Game.countDocuments({
+        categories: { $in: pagination.filter },
+      }).exec();
 
       const totalNumberPages = Math.ceil(totalGames / pagination.limit);
 
