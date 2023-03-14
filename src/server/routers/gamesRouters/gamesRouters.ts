@@ -7,6 +7,8 @@ import {
   getAllGames,
 } from "../../controllers/gamesControllers/gamesControllers.js";
 import routes from "../routes.js";
+import { validate } from "express-validation";
+import createGameSchema from "../../schemas/Game/createGameSchema.js";
 
 const { games } = routes;
 
@@ -30,6 +32,11 @@ const upload = multer({ storage });
 
 gamesRouter.get("/", getAllGames);
 
-gamesRouter.post(games.create, upload.single("backupImage"), createGame);
+gamesRouter.post(
+  games.create,
+  upload.single("image"),
+  validate(createGameSchema, {}, { abortEarly: false }),
+  createGame
+);
 
 export default gamesRouter;

@@ -3,7 +3,7 @@ import { Joi } from "express-validation";
 const createGameSchema = {
   body: Joi.object({
     name: Joi.string().max(30).required(),
-    backupImage: Joi.string().required(),
+    image: Joi.string(),
     about: Joi.string().max(500).required(),
     platforms: Joi.array().items(Joi.string()).required(),
     categories: Joi.array().items(Joi.string()).required(),

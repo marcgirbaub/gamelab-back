@@ -13,6 +13,7 @@ export const mockWitcherGame: GameStructure = {
   gameplayTime: 60,
   platforms: ["Playstation"],
   releaseYear: 2015,
+  image: "thewitcher.jpg",
 };
 
 export const games: GamesStructure = [mockWitcherGame];
