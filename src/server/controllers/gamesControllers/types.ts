@@ -1,4 +1,4 @@
-export interface Game {
+export interface GameStructure {
   name: string;
   backupImage: string;
   about: string;
@@ -10,4 +10,4 @@ export interface Game {
   ageRating: string;
 }
 
-export type Games = Game[];
+export type GamesStructure = GameStructure[];

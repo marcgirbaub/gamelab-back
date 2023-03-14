@@ -1,7 +1,7 @@
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
 import Game from "../../../database/models/Game.js";
-import { type Games } from "./types.js";
+import { type GameStructure, type GamesStructure } from "./types.js";
 
 export const getAllGames = async (
   req: Request,
@@ -13,7 +13,7 @@ export const getAllGames = async (
     page: +req.query.page! || 0,
     filter: req.query.filter,
   };
-  let games: Games;
+  let games: GamesStructure;
   let totalGames: number;
 
   try {
@@ -51,4 +51,12 @@ export const getAllGames = async (
 
     next(customError);
   }
+};
+
+export const createGame = async (
+  req: Request<Record<string, unknown>, Record<string, unknown>, GameStructure>,
+  res: Response,
+  next: NextFunction
+) => {
+  const game = req.body;
 };

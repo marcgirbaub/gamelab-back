@@ -1,6 +1,9 @@
-import { type Game, type Games } from "../controllers/gamesControllers/types";
+import {
+  type GameStructure,
+  type GamesStructure,
+} from "../controllers/gamesControllers/types";
 
-export const mockWitcherGame: Game = {
+export const mockWitcherGame: GameStructure = {
   name: "The Witcher",
   about: "This is an adventure game",
   ageRating: "17 +",
@@ -12,4 +15,4 @@ export const mockWitcherGame: Game = {
   releaseYear: 2015,
 };
 
-export const games: Games = [mockWitcherGame];
+export const games: GamesStructure = [mockWitcherGame];
