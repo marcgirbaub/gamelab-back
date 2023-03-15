@@ -19,6 +19,7 @@ const gameSchema = new Schema({
   releaseYear: { type: Number, required: true },
   developer: { type: String, required: true },
   ageRating: { type: String, required: true },
+  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 const Game = model("Games", gameSchema, "games");

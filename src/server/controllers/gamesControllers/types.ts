@@ -14,7 +14,6 @@ export interface GameStructure {
 export interface GameFormData {
   name: string;
   image: unknown;
-  backupImage?: string;
   about: string;
   platforms: string[];
   categories: string[];

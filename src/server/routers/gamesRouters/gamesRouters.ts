@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({ storage, limits: { fileSize: 9000000 } });
 
 gamesRouter.get("/", getAllGames);
 

@@ -1,4 +1,8 @@
-import "../../../loadEnvironment.js";
+import {
+  supabaseId,
+  supabaseKey,
+  supabaseUrl,
+} from "../../../loadEnvironment.js";
 import { type NextFunction, type Request, type Response } from "express";
 import { createClient } from "@supabase/supabase-js";
 import fs from "fs/promises";
@@ -7,11 +11,6 @@ import CustomError from "../../../CustomError/CustomError.js";
 import Game from "../../../database/models/Game.js";
 import statusCodes from "../../utils/statusCodes.js";
 import { type GamesStructure, type GameFormData } from "./types.js";
-import {
-  supabaseId,
-  supabaseKey,
-  supabaseUrl,
-} from "../../../loadEnvironment.js";
 
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
@@ -85,9 +84,13 @@ export const createGame = async (
       data: { publicUrl },
     } = supabase.storage.from(supabaseId!).getPublicUrl(gameImage!);
 
-    await Game.create({ ...game, image: gameImage, backupImage: publicUrl });
+    const newGame = await Game.create({
+      ...game,
+      image: gameImage,
+      backupImage: publicUrl,
+    });
 
-    res.status(201).json({ message: "The game has been created" });
+    res.status(201).json({ ...newGame.toJSON() });
   } catch (error) {
     const customError = new CustomError(
       "There was a problem creating the game",
