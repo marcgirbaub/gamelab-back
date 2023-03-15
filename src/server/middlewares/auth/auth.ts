@@ -1,5 +1,5 @@
 import { secret } from "../../../loadEnvironment.js";
-import { type NextFunction } from "express";
+import { type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import CustomError from "../../../CustomError/CustomError";
 import { type CustomJwtPayload, type CustomRequest } from "../../../types";
@@ -9,7 +9,7 @@ const {
   clientError: { unauthorized },
 } = statusCodes;
 
-const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
+const auth = async (req: CustomRequest, res: Response, next: NextFunction) => {
   try {
     const authorizationHeader = req.header("Authorization");
 
@@ -45,7 +45,7 @@ const auth = (req: CustomRequest, res: Response, next: NextFunction) => {
     next();
   } catch (error: unknown) {
     const invalidTokenError = new CustomError(
-      (error as Error).message,
+      "The token is not valid",
       401,
       "Invalid token"
     );
