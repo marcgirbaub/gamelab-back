@@ -4,6 +4,7 @@ import path from "path";
 import multer from "multer";
 import {
   createGame,
+  deleteGameById,
   getAllGames,
 } from "../../controllers/gamesControllers/gamesControllers.js";
 import routes from "../routes.js";
@@ -34,6 +35,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage, limits: { fileSize: 8000000 } });
 
 gamesRouter.get("/", getAllGames);
+gamesRouter.delete(games.delete, auth, deleteGameById);
 
 gamesRouter.post(
   games.create,
