@@ -109,5 +109,7 @@ export const deleteGameById = async (
       internalServer,
       "The game could not be deleted"
     );
+
+    next(customError);
   }
 };
