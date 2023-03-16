@@ -32,7 +32,9 @@ const supabaseBackup = async (
     req.body.backupImage = publicUrl;
 
     next();
-  } catch (error) {}
+  } catch (error) {
+    next(error);
+  }
 };
 
 export default supabaseBackup;
