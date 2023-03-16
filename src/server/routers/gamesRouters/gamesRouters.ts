@@ -11,6 +11,7 @@ import { validate } from "express-validation";
 import createGameSchema from "../../schemas/Game/createGameSchema.js";
 import auth from "../../middlewares/auth/auth.js";
 import supabaseBackup from "../../middlewares/supabaseBackup/supabaseBackup.js";
+import optimizing from "../../middlewares/optimizing/optimizing.js";
 
 const { games } = routes;
 
@@ -30,7 +31,7 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage, limits: { fileSize: 9000000 } });
+const upload = multer({ storage, limits: { fileSize: 8000000 } });
 
 gamesRouter.get("/", getAllGames);
 
@@ -39,6 +40,7 @@ gamesRouter.post(
   auth,
   upload.single("image"),
   validate(createGameSchema, {}, { abortEarly: false }),
+  optimizing,
   supabaseBackup,
   createGame
 );

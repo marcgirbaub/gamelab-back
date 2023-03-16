@@ -8,7 +8,6 @@ import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { type NextFunction, type Response } from "express";
 import { type CustomRequest } from "../../../types.js";
-import { type GameFormData } from "../../controllers/gamesControllers/types.js";
 
 const supabase = createClient(supabaseUrl!, supabaseKey!);
 
@@ -17,8 +16,6 @@ const supabaseBackup = async (
   res: Response,
   next: NextFunction
 ) => {
-  const game = req.body as GameFormData;
-
   try {
     const gameImage = req.file?.filename;
 
