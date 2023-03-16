@@ -24,7 +24,7 @@ const optimizing = async (
 
   try {
     await sharp(path.join("uploads", filename!))
-      .resize(200, 280, { fit: "cover" })
+      .resize(350, 200, { fit: "cover" })
       .webp({ quality: 100 })
       .toFormat("webp")
       .toFile(path.join("uploads", `${basePath}.webp`));
