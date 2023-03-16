@@ -1,8 +1,10 @@
 import { type Request, type Response } from "express";
+import CustomError from "../../../CustomError/CustomError";
 import Game from "../../../database/models/Game";
-import { games } from "../../mocks/gamesMocks";
+import { type CustomRequest } from "../../../types";
+import { games, mockWitcherGame } from "../../mocks/gamesMocks";
 import statusCodes from "../../utils/statusCodes";
-import { getAllGames } from "./gamesControllers";
+import { deleteGameById, getAllGames } from "./gamesControllers";
 
 const {
   success: { okCode },
@@ -92,6 +94,72 @@ describe("Given a getAllGames controller", () => {
       await getAllGames(req as Request, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given a deleteGameById controller", () => {
+  describe("When it receives a response", () => {
+    test("Then it should call its status method with 200", async () => {
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue(mockWitcherGame.id),
+      };
+      const req: Partial<CustomRequest> = {
+        params: { id: mockWitcherGame.id! },
+      };
+
+      const expectedStatus = okCode;
+
+      Game.findByIdAndDelete = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockReturnValue(mockWitcherGame),
+      }));
+
+      await deleteGameById(req as CustomRequest, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+    });
+
+    test("Then it should call its status method", async () => {
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue(mockWitcherGame.id),
+      };
+      const req: Partial<CustomRequest> = {
+        params: { id: mockWitcherGame.id! },
+      };
+
+      Game.findByIdAndDelete = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockReturnValue(mockWitcherGame),
+      }));
+
+      await deleteGameById(req as CustomRequest, res as Response, next);
+
+      expect(res.json).toHaveBeenCalledWith({ game: mockWitcherGame });
+    });
+  });
+
+  describe("When it receives a bad request", () => {
+    test("Then it should call its next function", async () => {
+      const res: Partial<Response> = {
+        status: jest.fn().mockReturnThis(),
+        json: jest.fn().mockResolvedValue({}),
+      };
+      const req: Partial<CustomRequest> = {};
+
+      req.params = {};
+
+      const expectedError = new CustomError(
+        "There was something wrong when deleting the games",
+        internalServer,
+        "The game could not be deleted"
+      );
+
+      Game.findByIdAndDelete = jest.fn().mockReturnValue(undefined);
+
+      await deleteGameById(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
