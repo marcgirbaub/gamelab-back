@@ -9,7 +9,7 @@ import { createClient } from "@supabase/supabase-js";
 import { type NextFunction, type Response } from "express";
 import { type CustomRequest } from "../../../types.js";
 
-const supabase = createClient(supabaseUrl!, supabaseKey!);
+export const supabase = createClient(supabaseUrl!, supabaseKey!);
 
 const supabaseBackup = async (
   req: CustomRequest,

@@ -1,8 +1,9 @@
+import "../../../loadEnvironment";
+import { MongoMemoryServer } from "mongodb-memory-server";
 import request from "supertest";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import { MongoMemoryServer } from "mongodb-memory-server";
 import connectDatabase from "../../../database/connectDatabase.js";
 import User from "../../../database/models/User.js";
 import statusCodes from "../../utils/statusCodes.js";
