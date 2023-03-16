@@ -1,7 +1,15 @@
 import { type NextFunction, type Request, type Response } from "express";
 import CustomError from "../../../CustomError/CustomError.js";
-import Game from "../../../database/models/Game.js";
-import { type Games } from "./types.js";
+import Game, {
+  type GameSchemaStructure,
+} from "../../../database/models/Game.js";
+import statusCodes from "../../utils/statusCodes.js";
+import { type GamesStructure } from "./types.js";
+import { type CustomRequest } from "../../../types.js";
+
+const {
+  clientError: { badRequest },
+} = statusCodes;
 
 export const getAllGames = async (
   req: Request,
@@ -13,7 +21,7 @@ export const getAllGames = async (
     page: +req.query.page! || 0,
     filter: req.query.filter,
   };
-  let games: Games;
+  let games: GamesStructure;
   let totalGames: number;
 
   try {
@@ -47,6 +55,32 @@ export const getAllGames = async (
       (error as Error).message,
       500,
       "There was an error"
+    );
+
+    next(customError);
+  }
+};
+
+export const createGame = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const game = req.body as GameSchemaStructure;
+  const { id } = req;
+
+  try {
+    const newGame = await Game.create({
+      ...game,
+      createdBy: id,
+    });
+
+    res.status(201).json({ ...newGame.toJSON() });
+  } catch (error) {
+    const customError = new CustomError(
+      "There was a problem creating the game",
+      badRequest,
+      "Something went wrong"
     );
 
     next(customError);

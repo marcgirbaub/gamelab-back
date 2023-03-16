@@ -1,13 +1,16 @@
-import { model, Schema } from "mongoose";
+import { type InferSchemaType, model, Schema } from "mongoose";
 
 const gameSchema = new Schema({
   name: {
     type: String,
     required: true,
   },
-  backupImage: {
+  image: {
     type: String,
     required: true,
+  },
+  backupImage: {
+    type: String,
   },
   about: { type: String, required: true },
   platforms: { type: [String], required: true },
@@ -16,8 +19,11 @@ const gameSchema = new Schema({
   releaseYear: { type: Number, required: true },
   developer: { type: String, required: true },
   ageRating: { type: String, required: true },
+  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 const Game = model("Games", gameSchema, "games");
+
+export type GameSchemaStructure = InferSchemaType<typeof gameSchema>;
 
 export default Game;
