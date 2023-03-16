@@ -9,7 +9,7 @@ import { type CustomRequest } from "../../../types.js";
 
 const {
   clientError: { badRequest },
-  success: { okCode },
+  success: { okCode, created },
   serverError: { internalServer },
 } = statusCodes;
 
@@ -77,7 +77,7 @@ export const createGame = async (
       createdBy: id,
     });
 
-    res.status(201).json({ ...newGame.toJSON() });
+    res.status(created).json({ ...newGame.toJSON() });
   } catch (error) {
     const customError = new CustomError(
       "There was a problem creating the game",

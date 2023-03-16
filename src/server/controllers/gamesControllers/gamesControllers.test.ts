@@ -4,11 +4,12 @@ import Game from "../../../database/models/Game";
 import { type CustomRequest } from "../../../types";
 import { games, mockWitcherGame } from "../../mocks/gamesMocks";
 import statusCodes from "../../utils/statusCodes";
-import { deleteGameById, getAllGames } from "./gamesControllers";
+import { createGame, deleteGameById, getAllGames } from "./gamesControllers";
 
 const {
-  success: { okCode },
+  success: { okCode, created },
   serverError: { internalServer },
+  clientError: { badRequest },
 } = statusCodes;
 
 beforeEach(() => {
@@ -160,6 +161,44 @@ describe("Given a deleteGameById controller", () => {
       await deleteGameById(req as CustomRequest, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+});
+
+describe("Given a createGame controller", () => {
+  describe("When it receives a request without a game to create", () => {
+    test("Then it should call its next method with an error", async () => {
+      const customError = new CustomError(
+        "There was a problem creating the game",
+        badRequest,
+        "Something went wrong"
+      );
+
+      req.body = {};
+
+      await createGame(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+
+  describe("When it receives a request with a game to create", () => {
+    test("Then it should call its status method with 201 and a json with the game created", async () => {
+      const expectedStatus = created;
+      const gameToCreate = mockWitcherGame;
+
+      req.body = gameToCreate;
+
+      Game.create = jest.fn().mockReturnValue({
+        ...gameToCreate,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        toJSON: jest.fn().mockReturnValue(gameToCreate),
+      });
+
+      await createGame(req as CustomRequest, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(expectedStatus);
+      expect(res.json).toHaveBeenCalledWith(gameToCreate);
     });
   });
 });
