@@ -1,18 +1,11 @@
-import {
-  supabaseId,
-  supabaseKey,
-  supabaseUrl,
-} from "../../../loadEnvironment.js";
 import { type NextFunction, type Request, type Response } from "express";
-import { createClient } from "@supabase/supabase-js";
-import fs from "fs/promises";
-import path from "path";
 import CustomError from "../../../CustomError/CustomError.js";
-import Game from "../../../database/models/Game.js";
+import Game, {
+  type GameSchemaStructure,
+} from "../../../database/models/Game.js";
 import statusCodes from "../../utils/statusCodes.js";
-import { type GamesStructure, type GameFormData } from "./types.js";
-
-const supabase = createClient(supabaseUrl!, supabaseKey!);
+import { type GamesStructure } from "./types.js";
+import { type CustomRequest } from "../../../types.js";
 
 const {
   clientError: { badRequest },
@@ -69,25 +62,17 @@ export const getAllGames = async (
 };
 
 export const createGame = async (
-  req: Request<Record<string, unknown>, Record<string, unknown>, GameFormData>,
+  req: CustomRequest,
   res: Response,
   next: NextFunction
 ) => {
-  const game = req.body;
-  const gameImage = req.file?.filename;
+  const game = req.body as GameSchemaStructure;
+  const { id } = req;
 
   try {
-    const backupImage = await fs.readFile(path.join("uploads", gameImage!));
-    await supabase.storage.from(supabaseId!).upload(gameImage!, backupImage);
-
-    const {
-      data: { publicUrl },
-    } = supabase.storage.from(supabaseId!).getPublicUrl(gameImage!);
-
     const newGame = await Game.create({
       ...game,
-      image: gameImage,
-      backupImage: publicUrl,
+      createdBy: id,
     });
 
     res.status(201).json({ ...newGame.toJSON() });

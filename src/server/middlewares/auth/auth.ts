@@ -1,9 +1,9 @@
 import { secret } from "../../../loadEnvironment.js";
 import { type Response, type NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import CustomError from "../../../CustomError/CustomError";
-import { type CustomJwtPayload, type CustomRequest } from "../../../types";
-import statusCodes from "../../utils/statusCodes";
+import CustomError from "../../../CustomError/CustomError.js";
+import { type CustomJwtPayload, type CustomRequest } from "../../../types.js";
+import statusCodes from "../../utils/statusCodes.js";
 
 const {
   clientError: { unauthorized },

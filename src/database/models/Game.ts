@@ -1,4 +1,4 @@
-import { model, Schema } from "mongoose";
+import { type InferSchemaType, model, Schema } from "mongoose";
 
 const gameSchema = new Schema({
   name: {
@@ -23,5 +23,7 @@ const gameSchema = new Schema({
 });
 
 const Game = model("Games", gameSchema, "games");
+
+export type GameSchemaStructure = InferSchemaType<typeof gameSchema>;
 
 export default Game;
