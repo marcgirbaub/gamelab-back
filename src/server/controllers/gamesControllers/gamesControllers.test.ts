@@ -4,12 +4,17 @@ import Game from "../../../database/models/Game";
 import { type CustomRequest } from "../../../types";
 import { games, mockWitcherGame } from "../../mocks/gamesMocks";
 import statusCodes from "../../utils/statusCodes";
-import { createGame, deleteGameById, getAllGames } from "./gamesControllers";
+import {
+  createGame,
+  deleteGameById,
+  getAllGames,
+  getGameById,
+} from "./gamesControllers";
 
 const {
   success: { okCode, created },
   serverError: { internalServer },
-  clientError: { badRequest },
+  clientError: { badRequest, notFound },
 } = statusCodes;
 
 beforeEach(() => {
@@ -199,6 +204,54 @@ describe("Given a createGame controller", () => {
 
       expect(res.status).toHaveBeenCalledWith(expectedStatus);
       expect(res.json).toHaveBeenCalledWith(gameToCreate);
+    });
+  });
+});
+
+describe("Given a getGameById controller", () => {
+  const req: Partial<CustomRequest> = {
+    params: { gameId: mockWitcherGame.id! },
+  };
+
+  describe("When it receives a request with a game id and the user is authorized", () => {
+    test("Then it should call its status method with 200 and json method with the game", async () => {
+      Game.findById = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockReturnValue(mockWitcherGame),
+      }));
+
+      await getGameById(req as CustomRequest, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(okCode);
+      expect(res.json).toHaveBeenCalledWith({ game: mockWitcherGame });
+    });
+  });
+
+  describe("When it receives a request with a game id and the user is authorized, but there is no game in the database", () => {
+    test("Then it should call next with 404 status code and an error", async () => {
+      const customError = new CustomError(
+        "Game not found",
+        notFound,
+        "Game not found"
+      );
+      Game.findById = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockResolvedValue(undefined),
+      }));
+
+      await getGameById(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+
+  describe("When it receives a request with a game id and the user is authorized, but the database throws an error", () => {
+    test("Then it should call next with 500 status code and an error", async () => {
+      Game.findById = jest.fn().mockImplementationOnce(() => ({
+        exec: jest.fn().mockRejectedValue(new Error("")),
+      }));
+
+      await getGameById(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });

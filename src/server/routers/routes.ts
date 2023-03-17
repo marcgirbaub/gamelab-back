@@ -6,6 +6,7 @@ const routes = {
   games: {
     create: "/create",
     delete: "/delete/:gameId",
+    detail: "/:gameId",
   },
 };
 

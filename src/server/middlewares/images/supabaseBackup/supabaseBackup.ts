@@ -2,12 +2,12 @@ import {
   supabaseId,
   supabaseKey,
   supabaseUrl,
-} from "../../../loadEnvironment.js";
+} from "../../../../loadEnvironment.js";
 import fs from "fs/promises";
 import path from "path";
 import { createClient } from "@supabase/supabase-js";
 import { type NextFunction, type Response } from "express";
-import { type CustomRequest } from "../../../types.js";
+import { type CustomRequest } from "../../../../types.js";
 
 export const supabase = createClient(supabaseUrl!, supabaseKey!);
 

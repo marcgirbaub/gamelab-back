@@ -1,9 +1,9 @@
 import { type NextFunction, type Response } from "express";
 import path from "path";
 import sharp from "sharp";
-import CustomError from "../../../CustomError/CustomError.js";
-import { type CustomRequest } from "../../../types.js";
-import statusCodes from "../../utils/statusCodes.js";
+import CustomError from "../../../../CustomError/CustomError.js";
+import { type CustomRequest } from "../../../../types.js";
+import statusCodes from "../../../utils/statusCodes.js";
 
 const {
   clientError: { badRequest },

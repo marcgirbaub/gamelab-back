@@ -1,9 +1,9 @@
-import { supabaseId } from "../../../loadEnvironment.js";
+import { supabaseId } from "../../../../loadEnvironment.js";
 import { type Response, type NextFunction } from "express";
 import fs from "fs/promises";
-import { type CustomRequest } from "../../../types.js";
+import { type CustomRequest } from "../../../../types.js";
 import supabaseBackup, { supabase } from "./supabaseBackup.js";
-import Game from "../../../database/models/Game.js";
+import Game from "../../../../database/models/Game.js";
 
 afterEach(async () => {
   jest.clearAllMocks();
