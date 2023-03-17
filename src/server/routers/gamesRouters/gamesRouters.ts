@@ -18,21 +18,23 @@ const { games } = routes;
 
 const gamesRouter = Router();
 
-const storage = multer.diskStorage({
-  destination: "uploads",
-  filename(req, file, callback) {
-    const suffix = crypto.randomUUID();
+const multerConfig = {
+  storage: multer.diskStorage({
+    destination: "uploads",
+    filename(req, file, callback) {
+      const suffix = crypto.randomUUID();
 
-    const extension = path.extname(file.originalname);
-    const basename = path.basename(file.originalname, extension);
+      const extension = path.extname(file.originalname);
+      const basename = path.basename(file.originalname, extension);
 
-    const filename = `${basename}-${suffix}${extension}`;
+      const filename = `${basename}-${suffix}${extension}`;
 
-    callback(null, filename);
-  },
-});
+      callback(null, filename);
+    },
+  }),
+};
 
-const upload = multer({ storage, limits: { fileSize: 8000000 } });
+const upload = multer({ ...multerConfig, limits: { fileSize: 8000000 } });
 
 gamesRouter.get("/", getAllGames);
 gamesRouter.delete(games.delete, auth, deleteGameById);
