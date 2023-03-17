@@ -70,7 +70,6 @@ export const createGame = async (
 ) => {
   const game = req.body as GameSchemaStructure;
   const { id } = req;
-
   try {
     const newGame = await Game.create({
       ...game,
