@@ -33,14 +33,6 @@ const req: Partial<CustomRequest> = {
   body: mockWitcherGame,
 };
 
-beforeAll(async () => {
-  await fs.writeFile("uploads/leagueoflegends", "leagueoflegends");
-});
-
-afterAll(async () => {
-  await fs.unlink("uploads/leagueoflegends");
-});
-
 describe("Given an optimizing middleware", () => {
   describe("When it receives a request with an image", () => {
     test("Then it should call its next method and put the optimized image to the request", async () => {
