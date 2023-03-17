@@ -118,10 +118,9 @@ export const getGameById = async (
   res: Response,
   next: NextFunction
 ) => {
-  const { gameId } = req.params;
-
   try {
-    const game = await Game.findById(gameId);
+    const { gameId } = req.params;
+    const game = await Game.findById(gameId).exec();
 
     if (!game) {
       const customError = new CustomError(
