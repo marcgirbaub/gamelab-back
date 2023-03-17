@@ -33,7 +33,7 @@ afterEach(async () => {
   jest.clearAllMocks();
 });
 
-describe("Gicen a GET /games endpoint", () => {
+describe("Given a GET /games endpoint", () => {
   const gamesUrl = "/games";
 
   describe("When it receives a request", () => {

@@ -14,6 +14,7 @@ export const mockWitcherGame: GameStructure = {
   platforms: ["Playstation"],
   releaseYear: 2015,
   image: "thewitcher.jpg",
+  id: "11234545",
 };
 
 export const games: GamesStructure = [mockWitcherGame];

@@ -9,6 +9,8 @@ import { type CustomRequest } from "../../../types.js";
 
 const {
   clientError: { badRequest },
+  success: { okCode, created },
+  serverError: { internalServer },
 } = statusCodes;
 
 export const getAllGames = async (
@@ -75,12 +77,37 @@ export const createGame = async (
       createdBy: id,
     });
 
-    res.status(201).json({ ...newGame.toJSON() });
+    res.status(created).json({ ...newGame.toJSON() });
   } catch (error) {
     const customError = new CustomError(
       "There was a problem creating the game",
       badRequest,
       "Something went wrong"
+    );
+
+    next(customError);
+  }
+};
+
+export const deleteGameById = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { gameId } = req.params;
+
+  try {
+    const game = await Game.findByIdAndDelete({
+      _id: gameId,
+      createdBy: req.id,
+    }).exec();
+
+    res.status(okCode).json({ game });
+  } catch (error) {
+    const customError = new CustomError(
+      "There was something wrong when deleting the games",
+      internalServer,
+      "The game could not be deleted"
     );
 
     next(customError);

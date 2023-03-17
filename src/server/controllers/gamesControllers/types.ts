@@ -1,5 +1,6 @@
 export interface GameStructure {
   name: string;
+  id?: string;
   image: string;
   backupImage?: string;
   about: string;
