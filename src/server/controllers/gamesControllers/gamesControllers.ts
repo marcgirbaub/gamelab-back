@@ -8,7 +8,7 @@ import { type GamesStructure } from "./types.js";
 import { type CustomRequest } from "../../../types.js";
 
 const {
-  clientError: { badRequest },
+  clientError: { badRequest, notFound },
   success: { okCode, created },
   serverError: { internalServer },
 } = statusCodes;
@@ -107,6 +107,40 @@ export const deleteGameById = async (
       "There was something wrong when deleting the games",
       internalServer,
       "The game could not be deleted"
+    );
+
+    next(customError);
+  }
+};
+
+export const getGameById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const { gameId } = req.params;
+
+  try {
+    const game = await Game.findById(gameId);
+
+    if (!game) {
+      const customError = new CustomError(
+        "Game not found",
+        notFound,
+        "Game not found"
+      );
+
+      next(customError);
+
+      return;
+    }
+
+    res.status(okCode).json({ game });
+  } catch (error: unknown) {
+    const customError = new CustomError(
+      (error as Error).message,
+      internalServer,
+      "Something went wrong"
     );
 
     next(customError);

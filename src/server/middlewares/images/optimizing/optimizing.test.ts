@@ -1,9 +1,9 @@
 import { type Response, type NextFunction } from "express";
 import fs from "fs/promises";
-import CustomError from "../../../CustomError/CustomError";
-import { type CustomRequest } from "../../../types";
-import { mockWitcherGame } from "../../mocks/gamesMocks";
-import statusCodes from "../../utils/statusCodes";
+import CustomError from "../../../../CustomError/CustomError";
+import { type CustomRequest } from "../../../../types";
+import { mockWitcherGame } from "../../../mocks/gamesMocks";
+import statusCodes from "../../../utils/statusCodes";
 import optimizing from "./optimizing";
 
 const { badRequest } = statusCodes.clientError;

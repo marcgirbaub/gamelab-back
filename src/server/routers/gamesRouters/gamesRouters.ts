@@ -11,8 +11,8 @@ import routes from "../routes.js";
 import { validate } from "express-validation";
 import createGameSchema from "../../schemas/Game/createGameSchema.js";
 import auth from "../../middlewares/auth/auth.js";
-import supabaseBackup from "../../middlewares/supabaseBackup/supabaseBackup.js";
-import optimizing from "../../middlewares/optimizing/optimizing.js";
+import supabaseBackup from "../../middlewares/images/supabaseBackup/supabaseBackup.js";
+import optimizing from "../../middlewares/images/optimizing/optimizing.js";
 
 const { games } = routes;
 
