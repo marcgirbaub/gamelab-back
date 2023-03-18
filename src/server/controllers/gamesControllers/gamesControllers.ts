@@ -146,7 +146,7 @@ export const getGameById = async (
   }
 };
 
-export const getUserGmes = async (
+export const getUserGames = async (
   req: CustomRequest,
   res: Response,
   next: NextFunction

@@ -7,6 +7,7 @@ import {
   deleteGameById,
   getAllGames,
   getGameById,
+  getUserGames,
 } from "../../controllers/gamesControllers/gamesControllers.js";
 import routes from "../routes.js";
 import { validate } from "express-validation";
@@ -38,6 +39,7 @@ const multerConfig = {
 const upload = multer({ ...multerConfig, limits: { fileSize: 8000000 } });
 
 gamesRouter.get("/", getAllGames);
+gamesRouter.get(games.mygames, auth, getUserGames);
 gamesRouter.delete(games.delete, auth, deleteGameById);
 gamesRouter.get(games.detail, auth, getGameById);
 gamesRouter.post(
