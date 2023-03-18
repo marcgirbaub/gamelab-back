@@ -9,6 +9,7 @@ import {
   deleteGameById,
   getAllGames,
   getGameById,
+  getUserGames,
 } from "./gamesControllers";
 
 const {
@@ -252,6 +253,43 @@ describe("Given a getGameById controller", () => {
       await getGameById(req as CustomRequest, res as Response, next);
 
       expect(next).toHaveBeenCalled();
+    });
+  });
+});
+
+describe("Given a getUserGames controller", () => {
+  const req: Partial<CustomRequest> = {};
+
+  describe("When it receives a request", () => {
+    test("Then it should call the status method with 200 and json method of the response", async () => {
+      Game.find = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValue(games),
+      }));
+      req.id = "11234545";
+
+      await getUserGames(req as CustomRequest, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(okCode);
+      expect(res.json).toHaveBeenCalledWith({ games });
+    });
+  });
+
+  describe("When it receives a request and the database throws an error", () => {
+    test("Then it should call the next method with an error", async () => {
+      const customError = new CustomError(
+        "Something went wrong",
+        badRequest,
+        "Something went wrong"
+      );
+
+      Game.find = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockRejectedValue(undefined),
+      }));
+      req.id = "11234545";
+
+      await getUserGames(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(customError);
     });
   });
 });
