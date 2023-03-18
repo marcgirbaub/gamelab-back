@@ -145,3 +145,25 @@ export const getGameById = async (
     next(customError);
   }
 };
+
+export const getUserGmes = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req;
+
+  try {
+    const games = await Game.find({ createdBy: id }).exec();
+
+    res.status(200).json({ games });
+  } catch {
+    const customError = new CustomError(
+      "Something went wrong",
+      badRequest,
+      "Something went wrong"
+    );
+
+    next(customError);
+  }
+};
