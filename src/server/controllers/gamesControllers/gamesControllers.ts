@@ -167,3 +167,46 @@ export const getUserGames = async (
     next(customError);
   }
 };
+
+export const updateGame = async (
+  req: CustomRequest,
+  res: Response,
+  next: NextFunction
+) => {
+  const { id } = req;
+  const game = req.body as GameSchemaStructure;
+  const { gameId } = req.params;
+
+  try {
+    const gameInfo = await Game.findById(gameId).exec();
+
+    if (gameInfo?.createdBy?.toString() !== id) {
+      const customError = new CustomError(
+        "User is not allowed to edit this game",
+        internalServer,
+        "You are not allowed to edit this game"
+      );
+
+      next(customError);
+    }
+
+    const updatedGame = await Game.findByIdAndUpdate(
+      gameId,
+      {
+        ...game,
+        createdBy: id,
+      },
+      { returnDocument: "after" }
+    ).exec();
+
+    res.status(okCode).json({ game: updatedGame });
+  } catch (error: unknown) {
+    const customError = new CustomError(
+      (error as Error).message,
+      notFound,
+      "Game not found"
+    );
+
+    next(customError);
+  }
+};
