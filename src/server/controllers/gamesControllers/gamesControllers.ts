@@ -178,7 +178,7 @@ export const updateGame = async (
   const { gameId } = req.params;
 
   try {
-    const gameInfo = await Game.findById(gameId);
+    const gameInfo = await Game.findById(gameId).exec();
 
     if (gameInfo?.createdBy?.toString() !== id) {
       const customError = new CustomError(
@@ -197,7 +197,7 @@ export const updateGame = async (
         createdBy: id,
       },
       { returnDocument: "after" }
-    );
+    ).exec();
 
     res.status(okCode).json({ game: updatedGame });
   } catch (error: unknown) {

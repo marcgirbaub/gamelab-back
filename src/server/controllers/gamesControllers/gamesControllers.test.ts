@@ -10,6 +10,7 @@ import {
   getAllGames,
   getGameById,
   getUserGames,
+  updateGame,
 } from "./gamesControllers";
 
 const {
@@ -290,6 +291,76 @@ describe("Given a getUserGames controller", () => {
       await getUserGames(req as CustomRequest, res as Response, next);
 
       expect(next).toHaveBeenCalledWith(customError);
+    });
+  });
+});
+
+describe("Given a updateGame controller", () => {
+  const req: Partial<CustomRequest> = {
+    params: { gameId: mockWitcherGame.id! },
+  };
+  const gameToUpdate = mockWitcherGame;
+
+  describe("When it receives a request", () => {
+    test("Then it should call the status method with 200 and json method of the response with the updated games", async () => {
+      req.body = gameToUpdate;
+
+      req.id = "123456789";
+
+      Game.findById = jest.fn().mockImplementation(() => ({
+        exec: jest
+          .fn()
+          .mockResolvedValue({ ...gameToUpdate, createdBy: req.id }),
+      }));
+
+      Game.findByIdAndUpdate = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockResolvedValue(gameToUpdate),
+      }));
+
+      await updateGame(req as CustomRequest, res as Response, next);
+
+      expect(res.status).toHaveBeenCalledWith(okCode);
+      expect(res.json).toHaveBeenCalledWith({ game: gameToUpdate });
+    });
+  });
+
+  describe("When it receives a request but the user id does not match with the game's creator", () => {
+    test("Then it should call the next method with an error", async () => {
+      req.body = gameToUpdate;
+
+      const expectedError = new CustomError(
+        "User is not allowed to edit this game",
+        internalServer,
+        "You are not allowed to edit this game"
+      );
+
+      req.id = "123456789";
+
+      Game.findById = jest.fn().mockImplementation(() => ({
+        exec: jest
+          .fn()
+          .mockResolvedValue({ ...gameToUpdate, createdBy: "test1234" }),
+      }));
+
+      await updateGame(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalledWith(expectedError);
+    });
+  });
+
+  describe("When it receives a request but the game does not exist", () => {
+    test("Then it should call the next method with an error", async () => {
+      req.body = gameToUpdate;
+
+      req.id = "123456789";
+
+      Game.findById = jest.fn().mockImplementation(() => ({
+        exec: jest.fn().mockRejectedValue(new Error("")),
+      }));
+
+      await updateGame(req as CustomRequest, res as Response, next);
+
+      expect(next).toHaveBeenCalled();
     });
   });
 });
