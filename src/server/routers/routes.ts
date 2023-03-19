@@ -8,6 +8,7 @@ const routes = {
     delete: "/delete/:gameId",
     detail: "/:gameId",
     mygames: "/mygames",
+    update: "/update/:gameId",
   },
 };
 

@@ -8,6 +8,7 @@ import {
   getAllGames,
   getGameById,
   getUserGames,
+  updateGame,
 } from "../../controllers/gamesControllers/gamesControllers.js";
 import routes from "../routes.js";
 import { validate } from "express-validation";
@@ -50,6 +51,14 @@ gamesRouter.post(
   optimizing,
   supabaseBackup,
   createGame
+);
+gamesRouter.patch(
+  games.update,
+  auth,
+  upload.single("image"),
+  optimizing,
+  supabaseBackup,
+  updateGame
 );
 
 export default gamesRouter;
