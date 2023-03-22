@@ -1,0 +1,169 @@
+{
+  "info": {
+    "_postman_id": "07724dd1-1220-463e-bdaa-678cf7414998",
+    "name": "Gamelab",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/users/login",
+              "host": ["{{production}}"],
+              "path": ["users", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/users/register",
+              "host": ["{{production}}"],
+              "path": ["users", "register"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Games",
+      "item": [
+        {
+          "name": "Get all games",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/",
+              "host": ["{{production}}"],
+              "path": ["games", ""]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get my games",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/mygames",
+              "host": ["{{production}}"],
+              "path": ["games", "mygames"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete a game",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/delete/:gameId",
+              "host": ["{{production}}"],
+              "path": ["games", "delete", ":gameId"],
+              "variable": [
+                {
+                  "key": "gameId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get game detail",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/:gameId",
+              "host": ["{{production}}"],
+              "path": ["games", ":gameId"],
+              "variable": [
+                {
+                  "key": "gameId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create a game",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/create",
+              "host": ["{{production}}"],
+              "path": ["games", "create"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a game",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "url": {
+              "raw": "{{production}}/games/update/:gameId",
+              "host": ["{{production}}"],
+              "path": ["games", "update", ":gameId"],
+              "variable": [
+                {
+                  "key": "gameId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "production",
+      "value": "https://marc-girbau-final-project-202301-bcn.onrender.com",
+      "type": "default"
+    },
+    {
+      "key": "local",
+      "value": "http://localhost:4000",
+      "type": "default"
+    }
+  ]
+}
