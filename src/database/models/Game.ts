@@ -12,14 +12,38 @@ const gameSchema = new Schema({
   backupImage: {
     type: String,
   },
-  about: { type: String, required: true },
-  platforms: { type: [String], required: true },
-  categories: { type: [String], required: true },
-  gameplayTime: { type: Number, required: true },
-  releaseYear: { type: Number, required: true },
-  developer: { type: String, required: true },
-  ageRating: { type: String, required: true },
-  createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+  about: {
+    type: String,
+    required: true,
+  },
+  platforms: {
+    type: [String],
+    required: true,
+  },
+  categories: {
+    type: [String],
+    required: true,
+  },
+  gameplayTime: {
+    type: Number,
+    required: true,
+  },
+  releaseYear: {
+    type: Number,
+    required: true,
+  },
+  developer: {
+    type: String,
+    required: true,
+  },
+  ageRating: {
+    type: String,
+    required: true,
+  },
+  createdBy: {
+    type: Schema.Types.ObjectId,
+    ref: "User",
+  },
 });
 
 const Game = model("Games", gameSchema, "games");

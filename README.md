@@ -8,11 +8,11 @@
 
 ### Front
 
-- [repo](https://github.com/isdi-coders-2023/Marc-Girbau-Final-Project-front-202301-bcn)
+- [repo](https://github.com/marcgirbaub/gamelab-front)
 
 ### Back
 
-- [repo](https://github.com/isdi-coders-2023/Marc-Girbau-Final-Project-back-202301-bcn)
+- [repo](https://github.com/marcgirbaub/gamelab-back)
 - [prod](https://marc-girbau-final-project-202301-bcn.onrender.com/)
 
 ## Endpoints
