@@ -8,7 +8,7 @@ import { type GamesStructure } from "./types.js";
 import { type CustomRequest } from "../../../types.js";
 
 const {
-  clientError: { badRequest, notFound },
+  clientError: { badRequest, notFound, unauthorized },
   success: { okCode, created },
   serverError: { internalServer },
 } = statusCodes;
@@ -183,7 +183,7 @@ export const updateGame = async (
     if (gameInfo?.createdBy?.toString() !== id) {
       const customError = new CustomError(
         "User is not allowed to edit this game",
-        internalServer,
+        unauthorized,
         "You are not allowed to edit this game"
       );
 

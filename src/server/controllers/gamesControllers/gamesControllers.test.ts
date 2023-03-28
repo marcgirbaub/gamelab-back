@@ -16,7 +16,7 @@ import {
 const {
   success: { okCode, created },
   serverError: { internalServer },
-  clientError: { badRequest, notFound },
+  clientError: { badRequest, notFound, unauthorized },
 } = statusCodes;
 
 beforeEach(() => {
@@ -295,18 +295,16 @@ describe("Given a getUserGames controller", () => {
   });
 });
 
-describe("Given a updateGame controller", () => {
+describe("Given an updateGame controller", () => {
   const req: Partial<CustomRequest> = {
     params: { gameId: mockWitcherGame.id! },
   };
   const gameToUpdate = mockWitcherGame;
+  req.id = "123456789";
+  req.body = gameToUpdate;
 
   describe("When it receives a request", () => {
     test("Then it should call the status method with 200 and json method of the response with the updated games", async () => {
-      req.body = gameToUpdate;
-
-      req.id = "123456789";
-
       Game.findById = jest.fn().mockImplementation(() => ({
         exec: jest
           .fn()
@@ -326,15 +324,11 @@ describe("Given a updateGame controller", () => {
 
   describe("When it receives a request but the user id does not match with the game's creator", () => {
     test("Then it should call the next method with an error", async () => {
-      req.body = gameToUpdate;
-
       const expectedError = new CustomError(
         "User is not allowed to edit this game",
-        internalServer,
+        unauthorized,
         "You are not allowed to edit this game"
       );
-
-      req.id = "123456789";
 
       Game.findById = jest.fn().mockImplementation(() => ({
         exec: jest
@@ -350,17 +344,19 @@ describe("Given a updateGame controller", () => {
 
   describe("When it receives a request but the game does not exist", () => {
     test("Then it should call the next method with an error", async () => {
-      req.body = gameToUpdate;
-
-      req.id = "123456789";
+      const expectedError = new CustomError(
+        "Game not found",
+        notFound,
+        "Game not found"
+      );
 
       Game.findById = jest.fn().mockImplementation(() => ({
-        exec: jest.fn().mockRejectedValue(new Error("")),
+        exec: jest.fn().mockRejectedValue(new Error("Game not found")),
       }));
 
       await updateGame(req as CustomRequest, res as Response, next);
 
-      expect(next).toHaveBeenCalled();
+      expect(next).toHaveBeenCalledWith(expectedError);
     });
   });
 });
